@@ -18,8 +18,7 @@ class NambafoodSpider(scrapy.Spider):
         for i in urls:
             yield response.follow(i, callback=self.parse)
 
-        print(response)
-
+        body = response.body
         items = NambaItem()
 
         cafe_name = response.css(".cafe--name::text")[0].extract().strip()
@@ -33,8 +32,15 @@ class NambafoodSpider(scrapy.Spider):
         phone = response.css(".map-address--text::text")[3].extract().strip()
         parent_categories_get = response.css('.tag-list__tag::text').extract()
         parent_categories = [i.strip() for i in parent_categories_get]
-        longitude = response.css("div.map a::attr(href)").extract()
-        latitude = response.css("div.map > a")
+
+        try:
+            latitude_data = re.findall('CAFE_LATITUDE = \d+.\d+', str(body))[1]
+            longitude_data = re.findall('CAFE_LONGITUDE = \d+.\d+', str(body))[1]
+            latitude = latitude_data.strip('CAFE_LATITUDE = ')
+            longitude = longitude_data.strip('CAFE_LONGITUDE = ')
+        except IndexError:
+            latitude = '42.873833'
+            longitude = '74.576809'
 
         """
         Section for scraping restaurant menu
