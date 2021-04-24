@@ -31,7 +31,9 @@ class NambafoodSpider(scrapy.Spider):
         working_hours = response.xpath("//div[contains(@class, 'information--item--description')]/text()")[3].extract().strip()
         address = response.css(".map-address--text::text")[1].extract().strip()
         phone = response.css(".map-address--text::text")[3].extract().strip()
-        latitude = response.css("div.map a::attr(href)").extract()
+        parent_categories_get = response.css('.tag-list__tag::text').extract()
+        parent_categories = [i.strip() for i in parent_categories_get]
+        longitude = response.css("div.map a::attr(href)").extract()
         latitude = response.css("div.map > a")
 
         """
@@ -86,6 +88,9 @@ class NambafoodSpider(scrapy.Spider):
         items['phone'] = phone
         items['categories'] = categories
         items['reviews'] = reviews
+        items['longitude'] = longitude
+        items['latitude'] = latitude
+        items['parent_categories'] = parent_categories
 
         yield items
 

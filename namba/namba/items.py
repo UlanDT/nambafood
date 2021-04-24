@@ -22,5 +22,8 @@ class NambaItem(scrapy.Item):
     phone = scrapy.Field()
     categories = scrapy.Field()
     reviews = scrapy.Field()
+    latitude = scrapy.Field()
+    longitude = scrapy.Field()
+    parent_categories = scrapy.Field()
 
 
